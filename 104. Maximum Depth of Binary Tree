@@ -1,0 +1,36 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+ class Solution
+ {
+    public:
+      int maxDepth(TreeNode*root)
+      {
+        int max = 0 , sum = 0 ;
+        if(!root) return max ;
+        max = 1 ;
+        preorderTraversal(root,max,sum);
+        return max;
+      }
+     private:
+     void preorderTraversal(TreeNode* root , int &max,int &sum)
+     {
+        sum++;          //每一次进入递归都先加1
+        if(root)        //如果节点不为空，那说明sum没加错，就可以和max进行比较
+        {
+        if(max < sum)   
+          max = sum ;   
+          preorderTraversal(root->left,max,sum);
+          sum--;        //每一次递归回来，是因为root->left ==nullptr，所以之前的sum相当于加错了，因此之后要减一
+          
+          preorderTraversal(root->right,max,sum);
+          sum--;
+         } 
+     }
+ };
