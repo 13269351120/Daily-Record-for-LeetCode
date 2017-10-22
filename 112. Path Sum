@@ -1,0 +1,23 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+ //本以为递归遍历一下就可以 但是始终找不到好的方法，所以就尝试了迭代的思想，想把每一路的值都求得，放在一个vector中，然后一一与sum比较，
+ //首先，迭代是个麻烦的过程，其次比较又十分费时间，下面是参考了网上的大神，这种思想在以前的题中出现过，只是自己目前还没有那么快的反应到，
+ //并且转化成有效代码。
+ class Solution
+ {
+  public :
+    bool hasPathSum(TreeNode *root,int sum)
+    {
+      if(!root) return false;               //递归基
+      else if(!root->left&&!root->right&&root->val == sum) return true; //到达叶子节点的时候，恰好其值等于sum
+      else return (hasPathSum(root->left,sum-root->val) || hasPathSum(root->right,sum-root->val));
+                                      //该步是关键，有点像汉诺塔的思路，若想把全部加起来为sum，则，左子树或者右子树的sum应该是sum-root->val
+    }
+ };
