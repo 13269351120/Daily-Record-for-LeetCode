@@ -1,0 +1,30 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+ //原本想要分层遍历，发现分层遍历的时候只是顺序正确，但是层与层之间的分隔没有解决，故引入了level这个分层标志，用来体现层次
+ 
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+    vector<vector<int>> result;
+    order(root,result,0);
+    return result;
+    }
+private:
+    void order(TreeNode* root , vector<vector<int>>&result,int level)
+    {
+      if(!root) return ;
+      if(level+1>result.size())
+      result.push_back(vector<int>());        //这句十分关键，如果第一次使用下标取新的一行result[level]的时候，因为其为空，故会操作失败，所以先
+                                              //将一个空的vector插入，这样便可以用下标操作
+      result[level].push_back(root->val);
+      order(root->left,result,level+1);
+      order(root->right,result,level+1);
+    }
+}; 
