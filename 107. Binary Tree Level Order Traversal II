@@ -1,0 +1,38 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+ //此题目为102题的反转，思路基本一致
+class Solution {
+public:
+    vector<vector<int>> levelOrderBottom(TreeNode* root) {
+        vector<vector<int>> result;
+        
+        order(root,result,0);
+        
+        vector<vector<int>> reverse;
+        
+        reverse.reserve(result.size());
+        
+        for(int i = result.size()-1 ; i >= 0 ;i--)
+        
+            reverse.push_back(result[i]);
+        
+        return reverse;
+    }
+private:
+    void order(TreeNode *root,vector<vector<int>> &result,int level)
+    {
+        if(!root) return ;
+        if(level+1 > result.size())
+            result.push_back(vector<int>());
+        result[level].push_back(root->val);
+        order(root->left,result,level+1);
+        order(root->right,result,level+1);
+    }
+};
