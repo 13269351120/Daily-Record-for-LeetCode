@@ -1,0 +1,61 @@
+//删除指定数值的节点，这类题目由于要用到删除节点的直接前驱，就会有pre
+//第一种思路是：再定义一个身先士卒的move指针，一旦发现move->val == target，则让m = m->next ，pre ->next = m ;
+
+//第二种思路是：定义一个假想的最前驱士兵dummy，然后让dummy->next = head; 记得return dummy->next；即可
+
+//对比：第一种思路对于head的选取很重要，所以要取得第一个值不是target的head
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeElements(ListNode* head, int val) {
+        
+        if(!head) return head;
+        while(head->val == val)
+        {
+            head = head->next;
+            if(!head) return head;
+        }
+        
+        ListNode* p = head;
+        ListNode* m = p ;
+        while(m)
+        {
+            if(m->val==val)
+            {
+                m = m->next;
+                p -> next = m;
+            }
+            else
+            {
+                p = m ;
+                m = m -> next;
+            }       
+        }
+        return head;
+    }    
+};
+//////////////////////////////////////////////////////////////////////
+class Solution {
+public:
+    ListNode* removeElements(ListNode* head, int val) {
+        ListNode* dummy=new ListNode(0);
+		ListNode* pre=dummy;
+		dummy->next=head;
+		while(pre->next){
+			if (pre->next->val==val){
+				pre->next=pre->next->next;
+			}
+			else
+				pre=pre->next;
+		}
+		return dummy->next;
+    }
+}
+
