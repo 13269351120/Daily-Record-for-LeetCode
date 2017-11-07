@@ -1,0 +1,82 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+ //目前已经实现的一种基于动态规划(DP)思路是：
+ /*
+ 我们先假想已经得到了n-1的所有二叉搜索树，那么如何得到n的所有二叉搜索树呢？这比此前仅仅只增加了一个节点，且它的值为n，根据二叉搜索树的性质：
+ TreeNode *old : 表示n-1的根节点 TreeNode *newTree :表示n的根节点
+ 第一种：新插入的节点n为根节点，既然现在新插入的节点的值是全树最大的，而它又是根节点，所以 TreeNode *newTree = new TreeNode(n);
+        newTree -> left = old;即可 此情况比较容易实现
+ 第二种：新插入的节点n取代原树的任意一个右节点，并将原来右节点挂在其左子树上即可，比如第一个右节点如果存在的话就是这样处理 ：
+ TreeNode *connect = old -> right ;  old -> right  = new TreeNode(n); old->right->left = connect ; 然后把这个状态存入solution
+ 再还原old -> right = connect ; old = old -> right ; 
+ 
+ 这里需要注意的是：我们要时常进行二叉树的复制，因为我们会不断的改变原树的形状，如果push入solution的是原树的根节点，就会随着程序的进行而改变
+ 这里采用的是递归进行二叉树的复制。
+ */
+ 
+ //正在思考的一种思路：
+ /*
+ 既然是要构成一棵二叉搜索树，我们只需要不断的插入，插入的顺序呢最简单的考虑是用n的全排列o(n！) 这是属于不可解的时间复杂度，而且这种排列
+ 会导致构造而成的二叉搜索树有十分多的重复，所以我希望找到一组序列，使其既可以避免重复，又可以减少全排列的种数
+ */
+ class Solution {
+public:
+    vector<TreeNode*> generateTrees(int n) {
+        vector<TreeNode*> result;
+        vector<TreeNode*> solution;
+        if(n <= 0) return result;
+        TreeNode *r = new TreeNode(1);
+        result.push_back(r);
+        for(int i = 2 ; i <= n ; i++)
+        {
+            while(!result.empty()) 
+            {
+                //newTree是先插入的节点当成根节点的情况
+                {
+                TreeNode *old = result.back();
+                TreeNode *old_copy = copy(old);
+                TreeNode *newTree = new TreeNode(i);
+                newTree->left = old_copy;
+                solution.push_back(newTree);
+                }
+                //遇到右节点就插入
+                TreeNode *old = result.back();
+
+                TreeNode *root = old;
+                TreeNode * connect ;
+                connect = old ;
+                while(old->right)
+                {                
+                    connect = old -> right;             //记录每一个右节点
+                    old->right = new TreeNode(i);
+                    old->right->left = connect ;
+                    solution.push_back(copy(root));
+                    old->right = connect;               //还原，假装什么都没有发生~
+                    old = old -> right;
+                }
+                connect->right = new TreeNode(i);
+                solution.push_back(copy(root));
+                result.pop_back();
+            }
+            result.assign(solution.begin(),solution.end());
+            solution.clear();
+        }
+        return result;        
+    }
+private:  
+    TreeNode *copy(TreeNode *root)
+    {
+        if(!root) return nullptr;
+        TreeNode *copy_root = new TreeNode(root->val);
+        copy_root ->left = copy(root->left);
+        copy_root ->right = copy(root->right);
+        return copy_root ;
+    }
+};
