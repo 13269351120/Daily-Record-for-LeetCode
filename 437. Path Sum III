@@ -1,0 +1,24 @@
+//本题参考了一种十分简洁而优秀的DFS算法
+//基本思路：要计算二叉树中沿路之和等于sum的总个数，以root为起点+以root->left为起点+以root->right为起点
+
+class Solution {
+public:
+    int pathSum(TreeNode* root, int sum) {
+    if(!root) return 0 ;
+    return (sumUp(root,0,sum) + pathSum(root->left,sum) + pathSum(root->right,sum));
+    }
+private:
+    int sumUp(TreeNode *root , int pre , int &sum)
+    {
+        if(!root) return 0 ;
+        int cur = pre + root->val ;
+        return (cur == sum) + sumUp(root->left,cur,sum) + sumUp(root->right,cur,sum);
+    }
+};
+//另：
+int &sum:将sum当成整数看，哪怕sum的内存中原本存放的不是整型值
+例如，如果将 float  a = 1.0 ；用int& a 输出，会得到一个非常奇怪的值，因为float在内存中的二进制表达和int相差甚远，如果按照int的表示法，就会得到一个
+很奇怪的值
+当然也有特例，如果将float a = 0.0 用int &a 输出，就会得到一个0，因为0.0在以float存储和int存储在内存中没有区别
+
+详情请戳：http://www.360doc.com/content/12/0602/14/9140140_215408783.shtml
