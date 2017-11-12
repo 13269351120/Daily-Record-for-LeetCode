@@ -1,0 +1,55 @@
+//返回所有左子叶子的值之和
+//个人思路是，用DFS去搜索，一旦遇到叶子节点，而且它还是一个左叶子节点（这里用一个布尔值isLeft来判断）
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int sumOfLeftLeaves(TreeNode* root) {
+      if(!root) return 0;
+      int sum = 0 ;
+      DFS(root,&sum,false);
+      return sum ;
+    }
+private:
+    void DFS(TreeNode *root , int *sum ,bool isLeft)      //这里需要注意不能是int sum ，因为这样的话每一次递归都会构建一个临时变量sum，返回即消失
+    {
+        if(!root->left && !root->right && isLeft)
+        {
+            *sum += root->val;
+            return ;
+        }
+        if(root->left) DFS(root->left,sum,true);
+        if(root->right) DFS(root->right,sum,false);
+    }
+    };
+    
+ //看了别人的答案，觉得自己对递归还是理解的不够深入
+ 
+ //因为左叶子一定有其父亲，所以  root->left && !root->left->left && !root->left->right 这个判断 
+ class Solution
+ {
+ public:
+  int sumOfLeftLeaves(TreeNode* root) {
+    if(!root) return 0 ;
+    if(root->left && !root->left->left && !root->left->right) return (root->left->val + sumOfLeftLeaves(root->right));
+    return (sumOfLeftLeaves(root->left) + sumOfLeftLeaves(root->right));
+  }
+ };
+ 
+ //拓展：如果要求所有叶子节点的值,只需要改一点点
+ class Solution
+ {
+ public:
+  int sumOfLeftLeaves(TreeNode* root) {
+    if(!root) return 0 ;
+    if(!root->left && !root->right) return (root->val );
+    return (sumOfLeftLeaves(root->left) + sumOfLeftLeaves(root->right));
+  }
+ };
