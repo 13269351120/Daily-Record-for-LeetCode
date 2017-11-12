@@ -1,0 +1,23 @@
+//此题输入一个字符串，字符串里又有若干个单词，所以要用到istringstream将整个字符串读入，然后再一一输出各个单词
+//需要注意的是：1.p2i[pattern[i]] = w2i[[word]] = i+1 ; 其对应的不能是0
+//2.即使in中的word全部对应，但是pattern的数量要严格等于word的总数 所以最后要有 size == i ;
+class Solution
+{
+  public:
+  bool wordPattern(string pattern, string str) {
+  
+  unordered_map <char,int> p2i ;
+  unordered_map <string,int> w2i ;
+  istringstream in(str);
+  int size = pattern.size();
+  int i = 0 ;
+  for(string word ; in >> word ; i++)
+  {
+      if(p2i[pattern[i]]!=w2i[word])
+      return false;
+      else 
+      p2i[pattern[i]] = w2i[word] = i+1 ;
+  }
+      return i == size ;
+  }
+};
