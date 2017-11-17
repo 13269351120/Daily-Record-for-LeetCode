@@ -1,0 +1,61 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int maxPathSum(TreeNode* root) {
+        int max = INT_MIN ;
+        if(!root) return 0 ;
+        queue<TreeNode*> que;
+        que.push(root);
+        while(!que.empty())
+        {
+            TreeNode *temp = que.front();
+            que.pop();
+            int l = maxpath(temp->left) ;
+            int r = maxpath(temp->right) ;
+            
+                if(l+r+temp->val > max) max = l+r+temp->val ;
+            if(temp->left) que.push(temp->left);
+            if(temp->right) que.push(temp->right);
+        }
+        return max ;
+    }
+private:
+    int maxpath(TreeNode *root)
+    {
+        if(!root) return 0 ;
+        return max(max(root->val+maxpath(root->left),root->val+maxpath(root->right)),0);
+    }
+    
+};
+
+class Solution
+{
+public:
+    int maxPathSum(TreeNode *root)
+    {
+        if(!root) return 0 ;
+        int max = INT_MIN;
+        maxpath(root,max);
+        return max;
+    }
+private:
+    int maxpath(TreeNode *root , int &MAX)
+    {
+        if(!root) return 0 ;
+        int l = maxpath(root->left,MAX) ;
+        int r = maxpath(root->right,MAX) ;
+        l = max(l,0) ; r = max(r,0);
+        if(l+r+root->val > MAX ) MAX = l+r+root->val;
+        return root->val + max(l,r) ;
+    }
+   
+    
+};
