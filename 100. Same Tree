@@ -1,3 +1,4 @@
+```C++
 /**
  * Definition for a binary tree node.
  * struct TreeNode {
@@ -16,3 +17,4 @@
 			return ((p->val == q->val) && isSameTree(p->left,q->left) && isSameTree(p->right,q->right) );
     }
 }
+```
